@@ -1,0 +1,42 @@
+server:
+  port: 8080
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,beans
+  endpoint:
+    health:
+      show-details: always
+spring:
+  application:
+    name: kickstarter
+  datasource:
+    url: "jdbc:h2:file:./database/database-shopping-cart;AUTO_SERVER=TRUE"
+    username: "celfoucs"
+    password: "change-me"
+    driver-class-name: "org.h2.Driver"
+  jpa:
+    database-platform: "org.hibernate.dialect.H2Dialect"
+    hibernate:
+      ddl-auto: update
+  security:
+    oauth2:
+      client:
+        registration:
+          keycloak:
+            client-id: backend
+            client-secret: sqpmHHbNd7rFtuPJs6KCRWJSGJI07tm1
+            authorization-grant-type: authorization_code
+            redirect-uri: '{baseUrl}/login/oauth2/code/{registrationId}'
+            scope:
+              - openid
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:8081/realms/shopping-cart
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8081/realms/shopping-cart
+          principal-claim-name: preferred_username
+          authority-prefix: ROLE_
+          authorities-claim-name: roles
