@@ -1,20 +1,25 @@
 package com.celfocus.hiring.kickstarter.db.repo;
 
 import com.celfocus.hiring.kickstarter.db.entity.ProductEntity;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 class ProductRepositoryTest {
 
+
+    private final ProductRepository productRepository;
+
+    public ProductRepositoryTest(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
+
     @Test
     void testFindProductBySku() {
-        // Given
-        ProductRepository productRepository = ProductRepository.create(new ObjectMapper());
         // When
         Optional<ProductEntity> product = productRepository.findBySku("SKUTEST2");
         // Then
