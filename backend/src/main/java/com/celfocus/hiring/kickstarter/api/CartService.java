@@ -9,8 +9,13 @@ import com.celfocus.hiring.kickstarter.db.repo.CartRepository;
 import com.celfocus.hiring.kickstarter.db.repo.ProductRepository;
 import com.celfocus.hiring.kickstarter.domain.Cart;
 import com.celfocus.hiring.kickstarter.domain.CartItem;
+import jakarta.persistence.OptimisticLockException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -27,6 +32,10 @@ public class CartService {
         this.productRepository = productRepository;
     }
 
+    @Retryable(
+            retryFor = {ObjectOptimisticLockingFailureException.class, OptimisticLockException.class},
+            backoff = @Backoff(delay = 200)
+    )
     public void addItemToCart(String username, CartItemInput itemInput) {
         var cart = cartRepository.findByUserId(username).orElseGet(() -> {
             var newCart = new CartEntity();
@@ -71,6 +80,11 @@ public class CartService {
                 .orElseThrow(() -> new RuntimeException("Cart not found"));
     }
 
+    @Retryable(
+            retryFor = {ObjectOptimisticLockingFailureException.class, OptimisticLockException.class},
+            backoff = @Backoff(delay = 200)
+    )
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public void removeItemFromCart(String username, String itemId) {
         cartRepository.findByUserId(username)
                 .ifPresent(cart -> cartItemRepository.deleteById(new CartItemPK(itemId, cart.getId())));

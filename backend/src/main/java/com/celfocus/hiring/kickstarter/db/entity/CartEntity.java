@@ -12,6 +12,7 @@ import java.util.List;
 public class CartEntity extends Cart<CartItemEntity> implements Serializable {
 
     private Long id;
+    private Long version;
 
     @Id
     @Column(name = "ID")
@@ -35,5 +36,15 @@ public class CartEntity extends Cart<CartItemEntity> implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    @Version
+    @Column(name = "VERSION")
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
     }
 }

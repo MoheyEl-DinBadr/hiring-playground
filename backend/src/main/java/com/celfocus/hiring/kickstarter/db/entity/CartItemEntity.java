@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 public class CartItemEntity extends CartItem implements Serializable {
 
     private CartEntity cart;
+    private Long version;
 
     public CartItemEntity() {
     }
@@ -50,5 +51,15 @@ public class CartItemEntity extends CartItem implements Serializable {
 
     public void setCart(CartEntity cart) {
         this.cart = cart;
+    }
+
+    @Version
+    @Column(name = "VERSION")
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
     }
 }
