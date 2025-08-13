@@ -36,9 +36,9 @@ public class CartService {
     )
     @Transactional
     public void addItemToCart(String username, CartItemInput itemInput) {
-        LOGGER.info("Adding item to cart: {}", itemInput.itemId());
+        LOGGER.info("Cart action - type=ADD_REQUEST, userId={}, itemId={}", username, itemInput.itemId());
         var cart = cartRepository.findByUserIdForUpdate(username).orElseGet(() -> {
-            LOGGER.info("Creating new cart for user: {}", username);
+            LOGGER.info("Cart action - type=CREATE_CART, userId={}", username);
             var newCart = new CartEntity();
             newCart.setUserId(username);
             return cartRepository.save(newCart);
@@ -46,15 +46,17 @@ public class CartService {
         cartItemService.getForUpdate(cart.getId(), itemInput.itemId())
                 .ifPresentOrElse((item) -> {
                     cartItemService.updateQuantityById(item.getCartId(), item.getItemId(), 1);
-                    LOGGER.info("Updated quantity of item in cart: {}", itemInput.itemId());
+                    LOGGER.info("Cart action - type=UPDATE_QUANTITY, userId={}, itemId={}, quantity=+1", 
+                        username, itemInput.itemId());
                 }, () -> {
                     cartItemService.addNewItemToCart(itemInput.itemId(), cart);
-                    LOGGER.info("Added new item to cart: {}", itemInput.itemId());
+                    LOGGER.info("Cart action - type=NEW_ITEM_ADDED, userId={}, itemId={}", 
+                        username, itemInput.itemId());
                 });
-        LOGGER.info("Finished adding item to cart: {}", itemInput.itemId());
     }
 
     public void clearCart(String username) {
+        LOGGER.info("Cart action - type=CLEAR_CART, userId={}", username);
         cartRepository.deleteByUserId(username);
     }
 
@@ -71,6 +73,7 @@ public class CartService {
             backoff = @Backoff(delay = 200)
     )
     public void removeItemFromCart(String username, String itemId) {
+        LOGGER.info("Cart action - type=REMOVE_ITEM, userId={}, itemId={}", username, itemId);
         cartRepository.findByUserId(username)
                 .ifPresent(cart -> cartItemService.deleteById(new CartItemPK(itemId, cart.getId())));
     }

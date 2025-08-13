@@ -3,7 +3,11 @@ server:
 
 logging:
   pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} %5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}] %logger{36} - %msg%n"
     level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
+  level:
+    root: INFO
+    '[com.celfocus.hiring]': INFO
 
 management:
   endpoints:

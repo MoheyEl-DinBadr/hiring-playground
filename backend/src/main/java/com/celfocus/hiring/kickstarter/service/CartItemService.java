@@ -27,7 +27,7 @@ public class CartItemService {
 
     @Transactional(propagation = Propagation.MANDATORY)
     public Optional<CartItem> getForUpdate(Long cartId, String itemId) {
-        LOGGER.info("Getting cart item for update with cartId: {} and itemId: {}", cartId, itemId);
+        LOGGER.info("Cart item action - type=GET_FOR_UPDATE, cartId={}, itemId={}", cartId, itemId);
         return cartItemRepository.findByIdForUpdate(cartId, itemId)
                 .map(this::mapToCartItem);
     }
@@ -40,7 +40,8 @@ public class CartItemService {
 
     @Transactional
     public void addNewItemToCart(String itemId, CartEntity cart) {
-        LOGGER.info("Adding new item to cart with itemId: {}", itemId);
+        LOGGER.info("Cart item action - type=ADD_NEW_ITEM, cartId={}, itemId={}, userId={}", 
+            cart.getId(), itemId, cart.getUserId());
         var product = productService.getProduct(itemId)
                 .orElseThrow(() -> new RuntimeException("Cart Item not found"));
         var cartItem = new CartItemEntity();
@@ -54,6 +55,7 @@ public class CartItemService {
 
     @Transactional
     public void deleteById(CartItemPK id) {
+        LOGGER.info("Cart item action - type=DELETE_ITEM, cartId={}, itemId={}", id.getCartId(), id.getItemId());
         cartItemRepository.deleteById(id);
     }
 
