@@ -24,8 +24,10 @@ public class KickstarterApplication implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        var products = ProductsLoader.loadProducts(new ObjectMapper());
+        if (productRepository.count() == 0) {
+            var products = ProductsLoader.loadProducts(new ObjectMapper());
+            productRepository.saveAll(products);
+        }
 
-        productRepository.saveAll(products);
     }
 }

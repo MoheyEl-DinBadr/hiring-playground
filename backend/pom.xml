@@ -92,13 +92,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.github.tomakehurst</groupId>
-            <artifactId>wiremock-jre8-standalone</artifactId>
-            <version>${wiremock-jre8-standalone.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-tracing</artifactId>
             <version>1.5.2</version>
