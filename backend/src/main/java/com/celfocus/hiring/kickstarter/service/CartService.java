@@ -10,14 +10,15 @@ import com.celfocus.hiring.kickstarter.domain.CartItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 
 @Service
-@Transactional
 public class CartService {
     private final CartRepository cartRepository;
     private static final Logger LOGGER = LoggerFactory.getLogger(CartService.class);
@@ -57,10 +58,12 @@ public class CartService {
         cartRepository.deleteByUserId(username);
     }
 
+
+    @Transactional
     public Cart<? extends CartItem> getCart(String username) {
         return cartRepository.findByUserIdForUpdate(username)
                 .map(this::mapToCart)
-                .orElseThrow(() -> new RuntimeException("Cart not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No Cart was found for the user"));
     }
 
     @Retryable(
