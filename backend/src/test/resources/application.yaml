@@ -14,7 +14,6 @@ spring:
             authorization-grant-type: authorization_code
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
             scope: openid
-            provider: wiremock
         provider:
           dummy:
             issuer-uri: http://localhost:8888/realms/test-realm

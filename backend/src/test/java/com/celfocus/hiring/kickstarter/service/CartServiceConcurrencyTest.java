@@ -6,9 +6,11 @@ import com.celfocus.hiring.kickstarter.db.entity.CartItemEntity;
 import com.celfocus.hiring.kickstarter.db.entity.CartItemPK;
 import com.celfocus.hiring.kickstarter.db.repo.CartItemRepository;
 import com.celfocus.hiring.kickstarter.db.repo.CartRepository;
+import com.celfocus.hiring.kickstarter.security.TestOAuth2Config;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.retry.annotation.EnableRetry;
 
 import java.util.concurrent.CountDownLatch;
@@ -21,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @EnableRetry
+@Import(TestOAuth2Config.class)
 @SpringBootTest
 class CartServiceConcurrencyTest {
 

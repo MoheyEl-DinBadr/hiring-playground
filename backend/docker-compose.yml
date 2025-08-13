@@ -1,22 +1,31 @@
+#include:
+#  - grafana-lgtm/docker-compose.yml
 services:
   playground-shopping-cart-api:
-    networks:
-    - celfocus-network
     build:
       context: .
       dockerfile: Dockerfile
+    environment:
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER-URI: http://keycloak:8081/realms/shopping-cart
+      SERVER_PORT: 8080
     ports:
-      - "8080:8080"
+      - "8084:8080"
 
   keycloak:
     image: quay.io/keycloak/keycloak:26.3.2
+    hostname: keycloak
     environment:
       KC_BOOTSTRAP_ADMIN_PASSWORD: admin
       KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_HOSTNAME: keycloak
+      KC_HTTP_PORT: 8081
     ports:
-      - "8081:8080"
+      - "8081:8081"
     command:
       - start-dev
       - --import-realm
     volumes:
       - ./realm-export.json:/opt/keycloak/data/import/realm.json
+
+
+
