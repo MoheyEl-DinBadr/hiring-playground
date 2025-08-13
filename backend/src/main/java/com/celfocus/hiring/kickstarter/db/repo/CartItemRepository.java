@@ -16,7 +16,7 @@ import java.util.Optional;
 public interface CartItemRepository extends JpaRepository<CartItemEntity, CartItemPK> {
 
 
-    @Lock(LockModeType.OPTIMISTIC_FORCE_INCREMENT)
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT ci FROM CartItemEntity ci WHERE ci.cartId = :cartId AND ci.itemId = :itemId")
     Optional<CartItemEntity> findByIdForUpdate(@Param("cartId") Long cartId, @Param("itemId") String itemId);
 

@@ -33,6 +33,7 @@ public class CartEntity extends Cart<CartItemEntity> implements Serializable {
         return super.getItems();
     }
 
+
     public void setId(Long id) {
         this.id = id;
     }
