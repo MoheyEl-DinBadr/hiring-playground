@@ -1,10 +1,26 @@
 server:
-  port: 8080
+  port: 8083
+
+logging:
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
+
 management:
+  #  tracing:
+  #    sampling:
+  #      probability: 1.0
+  #  otlp:
+  #    metrics:
+  #      export:
+  #        url: http://localhost:4318/v1/metrics
+  #        enabled: true
+  #    tracing:
+  #      endpoint: http://localhost:4318/v1/traces
+  #      compression: gzip
   endpoints:
     web:
       exposure:
-        include: health,info,beans
+        include: health,info,beans,metrics
   endpoint:
     health:
       show-details: always
@@ -40,3 +56,15 @@ spring:
           principal-claim-name: preferred_username
           authority-prefix: ROLE_
           authorities-claim-name: roles
+
+otel:
+  instrumentation:
+    logback-appender:
+      experimental:
+        capture-logger-context-attributes: true
+  logs:
+    exporter: otlp
+  exporter:
+    otlp:
+      protocol: http/protobuf
+      endpoint: http://localhost:4318
