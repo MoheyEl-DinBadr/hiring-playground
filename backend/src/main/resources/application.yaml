@@ -6,17 +6,6 @@ logging:
     level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
 
 management:
-  #  tracing:
-  #    sampling:
-  #      probability: 1.0
-  #  otlp:
-  #    metrics:
-  #      export:
-  #        url: http://localhost:4318/v1/metrics
-  #        enabled: true
-  #    tracing:
-  #      endpoint: http://localhost:4318/v1/traces
-  #      compression: gzip
   endpoints:
     web:
       exposure:
@@ -55,4 +44,4 @@ otel:
   exporter:
     otlp:
       protocol: http/protobuf
-      endpoint: http://localhost:4318
+      endpoint: http://grafana:4318

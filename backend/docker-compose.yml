@@ -1,5 +1,3 @@
-#include:
-#  - grafana-lgtm/docker-compose.yml
 services:
   playground-shopping-cart-api:
     build:
@@ -27,5 +25,12 @@ services:
     volumes:
       - ./realm-export.json:/opt/keycloak/data/import/realm.json
 
-
+  otel-lgtm:
+    image: grafana/otel-lgtm:latest
+    hostname: grafana
+    container_name: otel-lgtm
+    ports:
+      - "3000:3000"     # Grafana UI
+      - "4317:4317"     # OTLP gRPC receiver
+      - "4318:4318"     # OTLP HTTP receiver
 
